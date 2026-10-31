@@ -117,3 +117,7 @@ export function createHighlightCacheKey(
 export function estimateHighlightedSize(html: string, code: string): number {
   return Math.max(html.length * 2, code.length * 3);
 }
+
+export function codeForClipboard(code: string): string {
+  return code.endsWith("\n") ? code.slice(0, -1) : code;
+}

@@ -2171,10 +2171,10 @@ code {
 
 /* Long code blocks keep their actions in reach. The header sticks below the
    timeline's top fade; once stuck, the title hides, the header strip lets
-   clicks through to the code, and the toolbar sits on an opaque plate that
-   pointer devices see while the block is hovered or focused. Browsers without
-   scroll-state queries keep the static header. The block uses overflow: clip,
-   not hidden, so it does not become the header's scroll container. */
+   clicks through to the code, and the toolbar stays visible on an opaque
+   plate. Browsers without scroll-state queries keep the static header. The
+   block uses overflow: clip, not hidden, so it does not become the header's
+   scroll container. */
 @supports (container-type: scroll-state) {
   .chat-markdown .chat-markdown-codeblock-header {
     position: sticky;
@@ -2202,16 +2202,12 @@ code {
         0 0 0 3px var(--border);
     }
   }
+}
 
-  @media (hover: hover) {
-    @container scroll-state(stuck: top) {
-      .chat-markdown
-        .chat-markdown-codeblock:not(:hover, :focus-within)
-        .chat-markdown-codeblock-actions {
-        opacity: 0;
-      }
-    }
-  }
+/* Fork: no wrap toggle; wrapping follows the wordWrap setting. The toggle is
+   the only toolbar button with aria-pressed. */
+.chat-markdown-codeblock-actions [aria-pressed] {
+  display: none;
 }
 
 :is(.chat-markdown, .composer-tiptap) .chat-markdown-codeblock pre {

@@ -22,6 +22,7 @@ import { Button } from "../ui/button";
 import { Tooltip, TooltipPopup, TooltipTrigger } from "../ui/tooltip";
 import { HighlightedCodeLines } from "./HighlightedCodeLines";
 import {
+  codeForClipboard,
   createHighlightCacheKey,
   estimateHighlightedSize,
   extractFenceLanguage,
@@ -178,7 +179,7 @@ export function MarkdownCodeBlock({
     // make the rendered command differ from what the terminal would receive.
     !/[\p{Cc}\p{Cf}]/u.test(code.slice(0, -1));
 
-  const handleCopy = () => copyToClipboard(code);
+  const handleCopy = () => copyToClipboard(codeForClipboard(code));
 
   const copyButton = (
     <Tooltip>
