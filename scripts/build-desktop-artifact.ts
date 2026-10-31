@@ -2802,7 +2802,8 @@ export const createBuildConfig = Effect.fn("createBuildConfig")(function* (
   // Missing publish config infers a GitHub feed from tokens; staging has no repository, so manifest generation would crash.
   buildConfig.publish = null;
   if (!isDesktopPreviewVersion(version)) {
-    const publishConfig = yield* resolveGitHubPublishConfig(updateChannel);
+    // Fork: never embed the GitHub update feed, so an official release cannot replace this build.
+    const publishConfig: { provider: string } | undefined = undefined;
     if (publishConfig) {
       buildConfig.publish = [publishConfig];
     } else if (mockUpdates) {
