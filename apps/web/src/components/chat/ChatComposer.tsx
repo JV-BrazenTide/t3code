@@ -115,6 +115,11 @@ import {
   useRetainedContextPayloads,
 } from "./composerContextUndo";
 import type { ThreadSyncPhase } from "../../threadSync";
+import {
+  ComposerTasksPanel,
+  type ComposerTasksProgress,
+  type ComposerTaskStep,
+} from "./ComposerTasksBadge";
 import { ComposerBanner } from "./ComposerBanner";
 import { ComposerSurface } from "./ComposerSurface";
 import { ComposerBannerStack, type ComposerBannerStackItem } from "./ComposerBannerStack";
@@ -348,6 +353,8 @@ export interface ChatComposerHandle {
 }
 
 export interface ChatComposerProps {
+  activeTasksProgress?: ComposerTasksProgress | null;
+  activeTaskSteps?: readonly ComposerTaskStep[] | null;
   composerDraftTarget: ScopedThreadRef | DraftId;
   environmentId: EnvironmentId;
   canOperateThread: boolean;
@@ -3145,6 +3152,17 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
       <ComposerBanner.Dock>
         <ComposerBanner.Column>
           <ComposerBannerStack items={shelfItems} />
+          {!showComposerTopDrawer &&
+          pendingApprovals.length === 0 &&
+          incomingPendingUserInputs.length === 0 &&
+          props.activeTasksProgress &&
+          props.activeTaskSteps ? (
+            <ComposerTasksPanel
+              key={`${routeThreadRef.environmentId}:${routeThreadRef.threadId}`}
+              progress={props.activeTasksProgress}
+              steps={props.activeTaskSteps}
+            />
+          ) : null}
           {showComposerTopDrawer ? (
             <ComposerBanner.Attachment>
               <ComposerBanner.Root data-chat-composer-top-drawer="true" variant="info">

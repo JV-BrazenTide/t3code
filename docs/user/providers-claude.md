@@ -92,7 +92,9 @@ tool, which refuses skills reserved for manual invocation.
 To show Claude task lists in the web and desktop apps, add
 `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` under **Variables** in the Claude instance's
 **Environment** section in **Settings > Providers**. Each update shows as a Tasks
-row in the thread; open it to see every step.
+row in the thread; open it to see every step. Unfinished tasks also stay above
+the composer across turns in the same Claude session. Expand Tasks there to
+follow the checklist; completed lists hide when their turn finishes.
 
 ## OpenRouter
 
