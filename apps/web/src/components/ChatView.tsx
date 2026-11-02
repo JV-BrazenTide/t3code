@@ -130,8 +130,6 @@ import { useActiveThreadRef } from "../hooks/useActiveThreadRef";
 import { composerRequiresModifier } from "../composer-logic";
 import {
   derivePhase,
-  deriveActivePlanState,
-  selectComposerTasksPlan,
   deriveActiveWorkStartedAt,
   deriveCanInterruptRunningThread,
   findLatestProposedPlan,
@@ -1091,31 +1089,6 @@ export default function ChatView(props: ChatViewProps) {
   const [chatCanvasStore] = useState(createChatCanvasStore);
 
   const latestRunSettled = isLatestRunSettled(activeLatestRun, activeRuntime);
-  const activePlan = deriveActivePlanState(serverProjection, activeActivityRun?.runId);
-  const activeActivityRunSettled = isLatestRunSettled(activeActivityRun, activeRuntime);
-  const composerTasksPlan = selectComposerTasksPlan(
-    serverProjection,
-    activePlan,
-    activeActivityRun?.runId ?? null,
-    activeActivityRunSettled,
-  );
-  const activeComposerTasksProgress = (() => {
-    if (!composerTasksPlan) return null;
-    const live = !activeActivityRunSettled && composerTasksPlan.runId === activeActivityRun?.runId;
-    const totalSteps = composerTasksPlan.steps.length;
-    if (totalSteps === 0) return null;
-    const completedSteps = composerTasksPlan.steps.filter(
-      (step) => step.status === "completed",
-    ).length;
-    const step =
-      composerTasksPlan.steps.find((candidate) => candidate.status === "inProgress")?.step ??
-      composerTasksPlan.steps.find((candidate) => candidate.status === "pending")?.step ??
-      composerTasksPlan.steps.at(-1)!.step;
-    return { step, completedSteps, totalSteps, live };
-  })();
-  const activeComposerTaskSteps =
-    activeComposerTasksProgress && composerTasksPlan ? composerTasksPlan.steps : null;
-
   const activeThreadEnvironmentId = activeThread?.environmentId;
   const activeThreadProjectId = activeThread?.projectId;
   const activeProjectRef =
@@ -3656,8 +3629,6 @@ export default function ChatView(props: ChatViewProps) {
                                             : projectCloneSendBlockReason
                               }
                               isPreparingWorktree={isPreparingWorktree && !sendQueuesBehindSetup}
-                              activeTasksProgress={activeComposerTasksProgress}
-                              activeTaskSteps={activeComposerTaskSteps}
                               bannerItems={
                                 isDraftHeroState || composerBannerItems.length === 0
                                   ? EMPTY_COMPOSER_BANNER_ITEMS
